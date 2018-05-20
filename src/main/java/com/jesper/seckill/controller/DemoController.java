@@ -1,8 +1,10 @@
 package com.jesper.seckill.controller;
 
 import com.jesper.seckill.bean.User;
+import com.jesper.seckill.redis.RedisService;
 import com.jesper.seckill.result.CodeMsg;
 import com.jesper.seckill.result.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/demo")
 public class DemoController {
+
+    @Autowired
+    RedisService redisService;
 
     @RequestMapping("/")
     @ResponseBody
@@ -41,8 +46,16 @@ public class DemoController {
 
     @RequestMapping("/redis/get")
     @ResponseBody
-    public Result<User> redisGet(){
+    public Result<Long> redisGet(){
+       Long l1 = redisService.get("key1", Long.class);
+       return Result.success(l1);
+    }
 
+    @RequestMapping("/redis/get")
+    @ResponseBody
+    public Result<Boolean> redisSet(){
+        Boolean b1 = redisService.set("key1", "hello, Jesper");
+        return Result.success(b1);
     }
 
 
