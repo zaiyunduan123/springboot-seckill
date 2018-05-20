@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="miaosha" />
+        <module name="seckill" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="miaosha" target="1.6" />
+      <module name="seckill" target="1.6" />
     </bytecodeTargetLevel>
   </component>
 </project>

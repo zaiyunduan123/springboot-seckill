@@ -1,8 +1,10 @@
 package com.jesper.seckill.controller;
 
+import com.jesper.seckill.bean.User;
 import com.jesper.seckill.result.CodeMsg;
 import com.jesper.seckill.result.Result;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -25,10 +27,23 @@ public class DemoController {
         return Result.success("hello, Jesper");
     }
 
-    @RequestMapping("/helloError")
+    @RequestMapping("/Error")
     @ResponseBody
     public Result<String> error(){
         return Result.error(CodeMsg.SERVER_ERROR);
     }
+
+    @RequestMapping("/Thymeleaf")
+    public String thymeleaf(Model model){
+        model.addAttribute("name", "Jesper");
+        return "hello";
+    }
+
+    @RequestMapping("/redis/get")
+    @ResponseBody
+    public Result<User> redisGet(){
+
+    }
+
 
 }
