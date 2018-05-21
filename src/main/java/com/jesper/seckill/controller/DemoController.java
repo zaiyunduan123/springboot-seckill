@@ -2,8 +2,10 @@ package com.jesper.seckill.controller;
 
 import com.jesper.seckill.bean.User;
 import com.jesper.seckill.redis.RedisService;
+import com.jesper.seckill.redis.UserKey;
 import com.jesper.seckill.result.CodeMsg;
 import com.jesper.seckill.result.Result;
+import com.jesper.seckill.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,10 +22,12 @@ public class DemoController {
     @Autowired
     RedisService redisService;
 
+    @Autowired
+    UserService userService;
+
     @RequestMapping("/")
     @ResponseBody
-    String home()
-    {
+    String home() {
         return "Hello World";
     }
 
@@ -35,29 +39,49 @@ public class DemoController {
 
     @RequestMapping("/Error")
     @ResponseBody
-    public Result<String> error(){
+    public Result<String> error() {
         return Result.error(CodeMsg.SERVER_ERROR);
     }
 
     @RequestMapping("/Thymeleaf")
-    public String thymeleaf(Model model){
+    public String thymeleaf(Model model) {
         model.addAttribute("name", "Jesper");
         return "hello";
     }
 
     @RequestMapping("/redis/get")
     @ResponseBody
-    public Result<String> redisGet(){
-       String l1 = redisService.get("key1", String.class);
-       return Result.success(l1);
+    public Result<User> redisGet() {
+        User user = redisService.get(UserKey.getById, ""+1, User.class);
+        return Result.success(user);
     }
 
     @RequestMapping("/redis/set")
     @ResponseBody
-    public Result<Boolean> redisSet(){
-        Boolean b1 = redisService.set("key1", "hello, Jesper");
+    public Result<Boolean> redisSet() {
+        User user = new User();
+        user.setId(1);
+        user.setName("Jesper");
+        Boolean b1 = redisService.set(UserKey.getById, ""+1, user);
         return Result.success(b1);
     }
 
+    @RequestMapping("/db/doubleInsert")
+    @ResponseBody
+    public Result<Boolean> doubleInsert() {
+        try {
+            userService.doubleInsert();
+            return Result.success(true);
+        } catch (Exception e) {
+            return Result.error(CodeMsg.PRIMARY_ERROR);
+        }
+    }
+
+    @RequestMapping("/db/get")
+    @ResponseBody
+    public Result<User> dbGet() {
+        User user = userService.getById(1);
+        return Result.success(user);
+    }
 
 }

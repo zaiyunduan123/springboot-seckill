@@ -13,7 +13,7 @@
 		<version>1.5.8.RELEASE</version>
 	</parent>
 
-	<name>miaosha_2</name>
+	<name>jesper_seckill</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
