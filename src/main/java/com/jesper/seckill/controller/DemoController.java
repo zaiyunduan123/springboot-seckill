@@ -22,7 +22,8 @@ public class DemoController {
 
     @RequestMapping("/")
     @ResponseBody
-    String home() {
+    String home()
+    {
         return "Hello World";
     }
 
@@ -46,12 +47,12 @@ public class DemoController {
 
     @RequestMapping("/redis/get")
     @ResponseBody
-    public Result<Long> redisGet(){
-       Long l1 = redisService.get("key1", Long.class);
+    public Result<String> redisGet(){
+       String l1 = redisService.get("key1", String.class);
        return Result.success(l1);
     }
 
-    @RequestMapping("/redis/get")
+    @RequestMapping("/redis/set")
     @ResponseBody
     public Result<Boolean> redisSet(){
         Boolean b1 = redisService.set("key1", "hello, Jesper");
