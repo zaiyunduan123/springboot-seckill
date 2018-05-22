@@ -34,7 +34,7 @@ public class LoginController {
 
     @RequestMapping("/do_login")
     @ResponseBody
-    public Result<String> doLogin(HttpServletResponse response, @Valid LoginVo loginVo) {
+    public Result<String> doLogin(HttpServletResponse response, @Valid LoginVo loginVo) {//加入JSR303参数校验
         log.info(loginVo.toString());
         String token = userService.login(response, loginVo);
         return Result.success(token);

@@ -4,8 +4,8 @@ import com.jesper.seckill.result.CodeMsg;
 
 /**
  * Created by jiangyunxiong on 2018/5/22.
- *
- * 全局异常处理类
+ * <p>
+ * 自定义全局异常拦截器
  */
 public class GlobalException extends RuntimeException {
 
@@ -13,12 +13,12 @@ public class GlobalException extends RuntimeException {
 
     private CodeMsg codeMsg;
 
-    public GlobalException(CodeMsg codeMsg){
+    public GlobalException(CodeMsg codeMsg) {
         super(codeMsg.toString());
         this.codeMsg = codeMsg;
     }
 
-    public CodeMsg getCodeMsg(){
+    public CodeMsg getCodeMsg() {
         return codeMsg;
     }
 }
