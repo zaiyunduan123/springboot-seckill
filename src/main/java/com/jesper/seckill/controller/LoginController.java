@@ -1,6 +1,7 @@
 package com.jesper.seckill.controller;
 
 import com.jesper.seckill.result.Result;
+import com.jesper.seckill.vo.LoginVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,8 @@ public class LoginController {
 
     @RequestMapping("/do_login")
     @ResponseBody
-    public Result<Boolean> doLogin() {
+    public Result<Boolean> doLogin(LoginVo loginVo) {
+        log.info(loginVo.toString());
         return null;
     }
 
