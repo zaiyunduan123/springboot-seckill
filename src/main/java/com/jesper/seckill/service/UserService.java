@@ -1,5 +1,6 @@
 package com.jesper.seckill.service;
 
+import com.alibaba.druid.util.StringUtils;
 import com.jesper.seckill.bean.User;
 import com.jesper.seckill.exception.GlobalException;
 import com.jesper.seckill.mapper.UserMapper;
@@ -27,7 +28,7 @@ public class UserService {
     @Autowired
     RedisService redisService;
 
-    public static final String COOKI_NAME_TOKEN = "token";
+    public static final String COOKIE_NAME_TOKEN = "token";
 
     public User getById(long id) {
         return userMapper.getById(id);
@@ -63,10 +64,25 @@ public class UserService {
      */
     public void addCookie(HttpServletResponse response, String token, User user) {
         redisService.set(UserKey.token, token, user);
-        Cookie cookie = new Cookie(COOKI_NAME_TOKEN, token);
-        cookie.setMaxAge(UserKey.TOKEN_EXPIRE);
-        cookie.setPath("/");
+        Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);
+        cookie.setMaxAge(UserKey.token.expireSeconds());
+        cookie.setPath("/");//设置为网站根目录
         response.addCookie(cookie);
+    }
+
+    /**
+     * 根据token获取用户信息
+     */
+    public User getByToken(HttpServletResponse response, String token) {
+         if (StringUtils.isEmpty(token)){
+             return null;
+         }
+         User user = redisService.get(UserKey.token, token, User.class);
+         //延长有效期，有效期等于最后一次操作+有效期
+        if (user != null){
+            addCookie(response, token, user);
+        }
+        return user;
     }
 
 }
