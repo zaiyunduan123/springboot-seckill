@@ -6,6 +6,7 @@ import com.jesper.seckill.bean.User;
 import com.jesper.seckill.mapper.OrderMapper;
 import com.jesper.seckill.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.Date;
 /**
  * Created by jiangyunxiong on 2018/5/23.
  */
+@Service
 public class OrderService {
 
     @Autowired
