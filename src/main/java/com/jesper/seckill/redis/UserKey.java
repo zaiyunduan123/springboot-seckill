@@ -18,5 +18,6 @@ public class UserKey extends BasePrefix {
      * 需要缓存的字段
      */
     public static UserKey token = new UserKey(TOKEN_EXPIRE,"token");
+    public static UserKey getById = new UserKey(0, "id");
 
 }
