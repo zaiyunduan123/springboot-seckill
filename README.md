@@ -3,18 +3,18 @@
 
 ## 优化前压力测试
 
-1、模拟同一个用户10000个线程同时访问商品列表页面，每秒完成423次请求
+### 1、模拟同一个用户同时开启1000个线程循环10次访问商品列表页面，QPS=423
 ![首页](https://github.com/zaiyunduan123/jesper_seckill/blob/master/src/main/resources/static/img/stress-test/goodslist_test_1.png)
 ![首页](https://github.com/zaiyunduan123/jesper_seckill/blob/master/src/main/resources/static/img/stress-test/goodsList_test_2.png)
 ![首页](https://github.com/zaiyunduan123/jesper_seckill/blob/master/src/main/resources/static/img/stress-test/goodsList_test_3.png)
 
-2、模拟同一个用户10000个线程同时访问用户信息页面，每秒完成844次请求
+### 2、模拟同一个用户同时开启1000个线程循环10次访问用户信息页面，QPS=844
 ![首页](https://github.com/zaiyunduan123/jesper_seckill/blob/master/src/main/resources/static/img/stress-test/userinfo_test_2.png)
 ![首页](https://github.com/zaiyunduan123/jesper_seckill/blob/master/src/main/resources/static/img/stress-test/userinfo_test_1.png)
 
-3、模拟多个用户10000个线程同时访问用户信息页面，每秒完成1576次请求
+### 3、模拟多个用户同时开启1000个线程循环10次访问用户信息页面，QPS=1576
 ![首页](https://github.com/zaiyunduan123/jesper_seckill/blob/master/src/main/resources/static/img/stress-test/userinfo_test_4.png)
 ![首页](https://github.com/zaiyunduan123/jesper_seckill/blob/master/src/main/resources/static/img/stress-test/userinfo_test_5.png)
 
-4、redis压力测试，每秒完成45703次SET操作，每秒完成49850次GET操作
+### 4、redis压力测试，SET操作QPS=45703，GET操作QPS=49850
 ![首页](https://github.com/zaiyunduan123/jesper_seckill/blob/master/src/main/resources/static/img/stress-test/redist_test_1.png)
