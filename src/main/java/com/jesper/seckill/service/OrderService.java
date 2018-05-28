@@ -24,6 +24,9 @@ public class OrderService {
         return orderMapper.getOrderByUserIdGoodsId(userId, goodsId);
     }
 
+    public OrderInfo getOrderById(long orderId) {
+        return orderMapper.getOrderById(orderId);
+    }
     /**
      * 因为要同时分别在订单详情表和秒杀订单表都新增一条数据，所以要保证两个操作是一个事物
      */

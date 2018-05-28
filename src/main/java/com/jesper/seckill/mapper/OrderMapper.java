@@ -29,5 +29,7 @@ public interface OrderMapper {
     @Insert("insert into sk_order (user_id, goods_id, order_id)values(#{userId}, #{goodsId}, #{orderId})")
     public int insertSeckillOrder(SeckillOrder order);
 
+    @Select("select * from sk_order_info where id = #{orderId}")
+    public OrderInfo getOrderById(@Param("orderId")long orderId);
 
 }
