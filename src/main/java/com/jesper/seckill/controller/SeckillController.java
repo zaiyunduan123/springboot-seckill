@@ -51,20 +51,18 @@ public class SeckillController {
             return Result.error(CodeMsg.SESSION_ERROR);
         }
         model.addAttribute("user", user);
-        //判断库存数量是否大于1
+        //1、判断库存， 数量是否大于1
         GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
         int stock = goods.getStockCount();
         if (stock <= 0) {
             return Result.error(CodeMsg.SECKILL_OVER);
         }
-        //通过用户id和商品id来判断该用户是否已经秒杀到该商品，防止重复秒杀
-        long i = user.getId();
-        long j = goodsId;
+        //2、判断重复秒杀， 通过用户id和商品id来判断该用户是否已经秒杀到该商品，防止重复秒杀
         SeckillOrder order = orderService.getOrderByUserIdGoodsId(user.getId(), goodsId);
         if (order != null) {
             return Result.error(CodeMsg.REPEATE_SECKILL);
         }
-        // 秒杀成功: 减库存、下订单、写入秒杀订单
+        // 3、秒杀成功: 减库存、下订单、写入秒杀订单
         OrderInfo orderInfo = seckillService.seckill(user, goods);
         return Result.success(orderInfo);
     }

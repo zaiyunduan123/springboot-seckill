@@ -4,6 +4,8 @@ import com.jesper.seckill.bean.OrderInfo;
 import com.jesper.seckill.bean.SeckillOrder;
 import com.jesper.seckill.bean.User;
 import com.jesper.seckill.mapper.OrderMapper;
+import com.jesper.seckill.redis.OrderKey;
+import com.jesper.seckill.redis.RedisService;
 import com.jesper.seckill.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,13 +22,17 @@ public class OrderService {
     @Autowired
     OrderMapper orderMapper;
 
+    @Autowired
+    RedisService redisService;
+
     public SeckillOrder getOrderByUserIdGoodsId(long userId, long goodsId) {
-        return orderMapper.getOrderByUserIdGoodsId(userId, goodsId);
+        return redisService.get(OrderKey.getSeckillOrderByUidGid, "" + userId + "_" + goodsId, SeckillOrder.class);
     }
 
     public OrderInfo getOrderById(long orderId) {
         return orderMapper.getOrderById(orderId);
     }
+
     /**
      * 因为要同时分别在订单详情表和秒杀订单表都新增一条数据，所以要保证两个操作是一个事物
      */
@@ -49,6 +55,9 @@ public class OrderService {
         seckillOrder.setOrderId(orderId);
         seckillOrder.setUserId(user.getId());
         orderMapper.insertSeckillOrder(seckillOrder);
+
+        redisService.set(OrderKey.getSeckillOrderByUidGid, "" + user.getId() + "_" + goods.getId(), seckillOrder);
+
         return orderInfo;
     }
 
