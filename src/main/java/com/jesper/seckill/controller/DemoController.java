@@ -1,5 +1,6 @@
 package com.jesper.seckill.controller;
 
+import com.jesper.seckill.rabbitmq.MQSender;
 import com.jesper.seckill.redis.RedisService;
 import com.jesper.seckill.redis.UserKey;
 import com.jesper.seckill.result.CodeMsg;
@@ -20,6 +21,23 @@ public class DemoController {
     @Autowired
     RedisService redisService;
 
+
+    @Autowired
+    MQSender sender;
+
+//    @RequestMapping("/mq")
+//    @ResponseBody
+//    public Result<String> mq() {
+//        sender.send("hello,imooc");
+//        return Result.success("Hello，world");
+//    }
+
+//    @RequestMapping("/mq/topic")
+//    @ResponseBody
+//    public Result<String> topic() {
+//        sender.sendTopic("hello,imooc");
+//        return Result.success("Hello，world");
+//    }
 //    @Autowired
 //    UserService userService;
 //

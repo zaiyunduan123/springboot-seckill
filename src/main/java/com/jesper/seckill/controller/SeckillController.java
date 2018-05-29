@@ -1,14 +1,18 @@
 package com.jesper.seckill.controller;
 
-import com.jesper.seckill.bean.OrderInfo;
 import com.jesper.seckill.bean.SeckillOrder;
 import com.jesper.seckill.bean.User;
+import com.jesper.seckill.rabbitmq.MQSender;
+import com.jesper.seckill.rabbitmq.SeckillMessage;
+import com.jesper.seckill.redis.GoodsKey;
+import com.jesper.seckill.redis.RedisService;
 import com.jesper.seckill.result.CodeMsg;
 import com.jesper.seckill.result.Result;
 import com.jesper.seckill.service.GoodsService;
 import com.jesper.seckill.service.OrderService;
 import com.jesper.seckill.service.SeckillService;
 import com.jesper.seckill.vo.GoodsVo;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,12 +21,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * Created by jiangyunxiong on 2018/5/22.
  */
 @Controller
 @RequestMapping("/seckill")
-public class SeckillController {
+public class SeckillController implements InitializingBean {
 
     @Autowired
     GoodsService goodsService;
@@ -33,10 +40,22 @@ public class SeckillController {
     @Autowired
     SeckillService seckillService;
 
+    @Autowired
+    RedisService redisService;
+
+    @Autowired
+    MQSender sender;
+
+    //做标记，判断该商品是否被处理过了
+    private HashMap<Long, Boolean> localOverMap = new HashMap<Long, Boolean>();
+
     /**
      * GET POST
      * 1、GET幂等,服务端获取数据，无论调用多少次结果都一样
      * 2、POST，向服务端提交数据，不是幂等
+     * <p>
+     * 将同步下单改为异步下单
+     *
      * @param model
      * @param user
      * @param goodsId
@@ -44,27 +63,68 @@ public class SeckillController {
      */
     @RequestMapping(value = "/do_seckill", method = RequestMethod.POST)
     @ResponseBody
-    public Result<OrderInfo> list(Model model, User user, @RequestParam("goodsId") long goodsId) {
+    public Result<Integer> list(Model model, User user, @RequestParam("goodsId") long goodsId) {
 
 
         if (user == null) {
             return Result.error(CodeMsg.SESSION_ERROR);
         }
         model.addAttribute("user", user);
-        //1、判断库存， 数量是否大于1
-        GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
-        int stock = goods.getStockCount();
-        if (stock <= 0) {
+        //内存标记，减少redis访问
+        boolean over = localOverMap.get(goodsId);
+        if (over) {
             return Result.error(CodeMsg.SECKILL_OVER);
         }
-        //2、判断重复秒杀， 通过用户id和商品id来判断该用户是否已经秒杀到该商品，防止重复秒杀
+        //预减库存
+        long stock = redisService.decr(GoodsKey.getGoodsStock, "" + goodsId);//10
+        if (stock < 0) {
+            localOverMap.put(goodsId, true);
+            return Result.error(CodeMsg.SECKILL_OVER);
+        }
+        //判断重复秒杀
         SeckillOrder order = orderService.getOrderByUserIdGoodsId(user.getId(), goodsId);
         if (order != null) {
             return Result.error(CodeMsg.REPEATE_SECKILL);
         }
-        // 3、秒杀成功: 减库存、下订单、写入秒杀订单
-        OrderInfo orderInfo = seckillService.seckill(user, goods);
-        return Result.success(orderInfo);
+        //入队
+        SeckillMessage message = new SeckillMessage();
+        message.setUser(user);
+        message.setGoodsId(goodsId);
+        sender.sendSeckillMessage(message);
+        return Result.success(0);//排队中
+
     }
 
+    /**
+     * 系统初始化,将商品信息加载到redis和本地内存
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        List<GoodsVo> goodsVoList = goodsService.listGoodsVo();
+        if (goodsVoList == null) {
+            return;
+        }
+        for (GoodsVo goods : goodsVoList) {
+            redisService.set(GoodsKey.getGoodsStock, "" + goods.getId(), goods.getStockCount());
+            //初始化商品都是没有处理过的
+            localOverMap.put(goods.getId(), false);
+        }
+    }
+
+    /**
+     * orderId：成功
+     * -1：秒杀失败
+     * 0： 排队中
+     */
+    @RequestMapping(value = "/result", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<Long> seckillResult(Model model, User user,
+                                      @RequestParam("goodsId") long goodsId) {
+        model.addAttribute("user", user);
+        if (user == null) {
+            return Result.error(CodeMsg.SESSION_ERROR);
+        }
+        long orderId = seckillService.getSeckillResult(user.getId(), goodsId);
+        return Result.success(orderId);
+    }
 }
