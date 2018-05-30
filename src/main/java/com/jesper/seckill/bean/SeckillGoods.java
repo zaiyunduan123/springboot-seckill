@@ -11,6 +11,15 @@ public class SeckillGoods {
     private Integer stockCount;
     private Date startDate;
     private Date endDate;
+    private int version;
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
     public Long getId() {
         return id;

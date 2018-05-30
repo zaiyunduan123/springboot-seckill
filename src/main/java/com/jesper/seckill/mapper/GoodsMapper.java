@@ -21,8 +21,10 @@ public interface GoodsMapper {
     @Select("select g.*, sg.stock_count, sg.start_date, sg.end_date, sg.seckill_price  from sk_goods_seckill sg left join sk_goods g  on sg.goods_id = g.id where g.id = #{goodsId}")
     public GoodsVo getGoodsVoByGoodsId(@Param("goodsId") long goodsId);
 
-    //stock_count > 0 防止超卖
-    @Update("update sk_goods_seckill set stock_count = stock_count - 1 where goods_id = #{goodsId} and stock_count > 0")
-    public int reduceStock(SeckillGoods seckillGoods);
+    //stock_count > 0 和 版本号实现乐观锁 防止超卖
+    @Update("update sk_goods_seckill set stock_count = stock_count - 1, version= version + 1 where goods_id = #{goodsId} and stock_count > 0 and version = #{version}")
+    public int reduceStockByVersion(SeckillGoods seckillGoods);
+
+
 
 }

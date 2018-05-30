@@ -41,7 +41,7 @@ public class GoodsService {
     public boolean reduceStock(GoodsVo goods){
         SeckillGoods sg = new SeckillGoods();
         sg.setGoodsId(goods.getId());
-        int ret = goodsMapper.reduceStock(sg);
+        int ret = goodsMapper.reduceStockByVersion(sg);
         return ret > 0;
     }
 
