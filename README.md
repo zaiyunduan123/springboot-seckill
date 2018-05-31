@@ -1,5 +1,6 @@
 # 基于Springboot商品秒杀系统
-
+## 系统介绍
+基于Springboot商品秒杀系统是使用SpringBoot开发的高并发限时抢购秒杀系统，项目针对高并发情况实现了系统缓存、降级和限流。
 
 ## 开发工具: 
 IntelliJ IDEA + Navicat + Sublime Text3 + Git + Chrome
