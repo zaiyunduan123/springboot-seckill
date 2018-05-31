@@ -1,5 +1,6 @@
 package com.jesper.seckill.controller;
 
+import com.google.common.util.concurrent.RateLimiter;
 import com.jesper.seckill.bean.SeckillOrder;
 import com.jesper.seckill.bean.User;
 import com.jesper.seckill.rabbitmq.MQSender;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by jiangyunxiong on 2018/5/22.
@@ -46,6 +48,9 @@ public class SeckillController implements InitializingBean {
     @Autowired
     MQSender sender;
 
+    //基于令牌桶算法的限流实现类
+    RateLimiter rateLimiter = RateLimiter.create(10);
+
     //做标记，判断该商品是否被处理过了
     private HashMap<Long, Boolean> localOverMap = new HashMap<Long, Boolean>();
 
@@ -65,6 +70,9 @@ public class SeckillController implements InitializingBean {
     @ResponseBody
     public Result<Integer> list(Model model, User user, @RequestParam("goodsId") long goodsId) {
 
+        if (!rateLimiter.tryAcquire(1000, TimeUnit.MILLISECONDS)) {
+            return  Result.error(CodeMsg.ACCESS_LIMIT_REACHED);
+        }
 
         if (user == null) {
             return Result.error(CodeMsg.SESSION_ERROR);
