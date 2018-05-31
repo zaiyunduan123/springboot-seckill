@@ -25,3 +25,14 @@ hs_err_pid*
 # 过滤不必要的目录和文件
 *.iml
 .idea
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+/seckill.iml
+/miaosha.iml
+/.idea/
