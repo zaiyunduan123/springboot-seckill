@@ -9,14 +9,10 @@ IntelliJ IDEA + Navicat + Sublime Text3 + Git + Chrome
 JMeter
 
 
-## 前端技术
-Bootstrap + jQuery + Thymeleaf
-
-## 后端技术
-SpringBoot + MyBatis + MySQL + JSR303
-
-## 中间件技术
-Druid + Redis + RabbitMQ 
+## 开发技术
+1. 前端技术 ：Bootstrap + jQuery + Thymeleaf
+2. 后端技术 ：SpringBoot + MyBatis + MySQL + JSR303
+3. 中间件技术 : Druid + Redis + RabbitMQ 
 
 
 ## 实现技术点
