@@ -15,33 +15,51 @@ import java.util.List;
 @Service
 public class GoodsService {
 
+    //乐观锁冲突最大重试次数
+    private static final int DEFAULT_MAX_RETRIES = 5;
+
     @Autowired
     GoodsMapper goodsMapper;
 
     /**
      * 查询商品列表
+     *
      * @return
      */
-    public List<GoodsVo> listGoodsVo(){
+    public List<GoodsVo> listGoodsVo() {
         return goodsMapper.listGoodsVo();
     }
 
     /**
      * 根据id查询指定商品
+     *
      * @return
      */
-    public GoodsVo getGoodsVoByGoodsId(long goodsId){
+    public GoodsVo getGoodsVoByGoodsId(long goodsId) {
         return goodsMapper.getGoodsVoByGoodsId(goodsId);
     }
 
     /**
      * 减少库存，每次减一
+     *
      * @return
      */
-    public boolean reduceStock(GoodsVo goods){
+    public boolean reduceStock(GoodsVo goods) {
+        int numAttempts = 0;
         SeckillGoods sg = new SeckillGoods();
+        int ret = 0;
         sg.setGoodsId(goods.getId());
-        int ret = goodsMapper.reduceStockByVersion(sg);
+        do {
+            numAttempts++;
+            try {
+                ret = goodsMapper.reduceStockByVersion(sg);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (ret != 0)
+                break;
+        } while (numAttempts < DEFAULT_MAX_RETRIES);
+
         return ret > 0;
     }
 
