@@ -72,5 +72,6 @@ JMeter
 优化后：QPS = 2501
 ![优化后](https://github.com/zaiyunduan123/jesper_seckill/blob/master/src/main/resources/static/img/stress-test/optimised_goodslist.png)
 
-
+## 后记
+（本项目在慕课网项目基础上修改而成）
 
