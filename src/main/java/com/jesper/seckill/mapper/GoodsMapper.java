@@ -1,6 +1,7 @@
 package com.jesper.seckill.mapper;
 
 import com.jesper.seckill.bean.SeckillGoods;
+import com.jesper.seckill.dto.IdVersion;
 import com.jesper.seckill.vo.GoodsVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -25,6 +26,9 @@ public interface GoodsMapper {
     @Update("update sk_goods_seckill set stock_count = stock_count - 1, version= version + 1 where goods_id = #{goodsId} and stock_count > 0 and version = #{version}")
     public int reduceStockByVersion(SeckillGoods seckillGoods);
 
+    @Select("select g.id, sg.version from sk_goods_seckill sg left join sk_goods g on sg.goods_id = g.id")
+    public List<IdVersion> listIdVersion();
 
 
 }
+
