@@ -17,6 +17,8 @@ public class OrderInfo {
     private Integer status;
     private Date createDate;
     private Date payDate;
+    private Long orderId;
+
     public Long getId() {
         return id;
     }
@@ -83,4 +85,13 @@ public class OrderInfo {
     public void setPayDate(Date payDate) {
         this.payDate = payDate;
     }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
 }
+
