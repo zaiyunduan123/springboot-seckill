@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Order(value=1)
 public class LoadVersions implements CommandLineRunner {
 
-    public static ConcurrentHashMap<Long, Integer> idVersionMap = new ConcurrentHashMap<Long, Integer>();;
+    public static ConcurrentHashMap<Long, Integer> idVersionMap = new ConcurrentHashMap<Long, Integer>();
 
     @Autowired
     private GoodsService goodsService;
