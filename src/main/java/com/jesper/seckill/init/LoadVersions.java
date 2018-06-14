@@ -27,9 +27,6 @@ public class LoadVersions implements CommandLineRunner {
              idVersions) {
             idVersionMap.put(iv.getId(), iv.getVersion());
         }
-
-
-        //System.out.println(this.idVersionMap);
     }
 }
 
