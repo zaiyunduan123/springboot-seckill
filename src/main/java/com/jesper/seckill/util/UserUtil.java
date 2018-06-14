@@ -20,6 +20,8 @@ import com.jesper.seckill.bean.User;
 
 public class UserUtil {
 	
+	private static final String D_TOKENS_TXT = ".";
+
 	private static void createUser(int count) throws Exception{
 		List<User> users = new ArrayList<User>(count);
 		//生成用户
@@ -54,7 +56,7 @@ public class UserUtil {
 		System.out.println("insert to db");
 		//登录，生成token
 		String urlString = "http://localhost:8080/login/do_login";
-		File file = new File("D:/tokens.txt");
+		File file = new File(D_TOKENS_TXT);
 		if(file.exists()) {
 			file.delete();
 		}
@@ -97,6 +99,6 @@ public class UserUtil {
 	}
 	
 	public static void main(String[] args)throws Exception {
-		createUser(5000);
+		createUser(1);
 	}
 }
