@@ -4,16 +4,9 @@ package com.jesper.seckill.bean;
  * Created by jiangyunxiong on 2018/5/22.
  */
 public class SeckillOrder {
-    private Long id;
+    private Long  id;
     private Long userId;
-    private Long  orderId;
     private Long goodsId;
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
     public Long getUserId() {
         return userId;
     }
@@ -21,10 +14,10 @@ public class SeckillOrder {
         this.userId = userId;
     }
     public Long getOrderId() {
-        return orderId;
+        return id;
     }
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setOrderId(Long id) {
+        this.id = id;
     }
     public Long getGoodsId() {
         return goodsId;
