@@ -20,16 +20,19 @@ public interface OrderMapper {
      * @param orderInfo
      * @return
      */
-    @Insert("insert into sk_order_info(user_id, goods_id, goods_name, goods_count, goods_price, order_channel, status, create_date)values("
-            + "#{userId}, #{goodsId}, #{goodsName}, #{goodsCount}, #{goodsPrice}, #{orderChannel},#{status},#{createDate} )")
-    @SelectKey(keyColumn = "id", keyProperty = "id", resultType = long.class, before = false, statement = "select last_insert_id()")
+    @Insert("insert into sk_order_info(user_id, goods_id, goods_name, goods_count, goods_price, order_channel, status, create_date, order_id)values("
+            + "#{userId}, #{goodsId}, #{goodsName}, #{goodsCount}, #{goodsPrice}, #{orderChannel},#{status},#{createDate}, #{orderId} )")
     public long insert(OrderInfo orderInfo);
 
 
-    @Insert("insert into sk_order (user_id, goods_id, order_id)values(#{userId}, #{goodsId}, #{orderId})")
-    public int insertSeckillOrder(SeckillOrder order);
+    @Insert("insert into sk_order (user_id, goods_id)values(#{userId}, #{goodsId})")
+    //@SelectKey( keyProperty = "id", resultType = long.class, before = false, statement = "select last_insert_id()") // TODO
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")/*增加这个注解插入记录后会返回自增长的id*/
+    public void insertSeckillOrder(SeckillOrder order);
 
-    @Select("select * from sk_order_info where id = #{orderId}")
+    // repair //TODO
+    @Select("select user_id, goods_id, delivery_addr_id, goods_name, goods_count, goods_price, order_channel, status, create_date, pay_date from sk_order_info where order_id = #{orderId}")
     public OrderInfo getOrderById(@Param("orderId")long orderId);
 
 }
+
