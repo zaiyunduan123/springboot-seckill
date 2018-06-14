@@ -42,7 +42,7 @@ public class OrderService {
 
         // TODO
         // sk_order 表中存在 id 和 orderId
-        // 应该是过度设计， orderId 足以表示订单的唯一性，可以将orderId 作为主键， 从 某一个数据开始自增长
+        // 应该是过度设计， orderId 足以表示订单的唯一性，可以将orderId 作为主键， 从 某个值开始自增长
 
         SeckillOrder seckillOrder = new SeckillOrder();
         seckillOrder.setGoodsId(goods.getId());
@@ -50,7 +50,6 @@ public class OrderService {
         orderMapper.insertSeckillOrder(seckillOrder);
 
         long orderId = seckillOrder.getOrderId();
-        //System.out.println("新增的order_id:" + orderId);
 
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setCreateDate(new Date());
@@ -63,7 +62,6 @@ public class OrderService {
         orderInfo.setStatus(0);
         orderInfo.setUserId(user.getId());
         orderInfo.setOrderId(orderId);
-        System.out.println("here orderId:"+orderInfo.getOrderId());
         orderMapper.insert(orderInfo);
 
         redisService.set(OrderKey.getSeckillOrderByUidGid, "" + user.getId() + "_" + goods.getId(), seckillOrder);
