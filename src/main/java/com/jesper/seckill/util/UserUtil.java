@@ -20,7 +20,7 @@ import com.jesper.seckill.bean.User;
 
 public class UserUtil {
 	
-	private static final String D_TOKENS_TXT = "/home/tokens.txt";
+	private static final String D_TOKENS_TXT = "D:/tokens.txt";
 
 	private static void createUser(int count) throws Exception{
 		List<User> users = new ArrayList<User>(count);
