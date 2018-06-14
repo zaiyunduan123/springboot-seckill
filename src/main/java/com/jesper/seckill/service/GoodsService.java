@@ -61,14 +61,9 @@ public class GoodsService {
     public boolean reduceStock(GoodsVo goods) { //TODO
         int numAttempts = 0;
         // 这里 创建的SeckillGoods 的默认 version = 0,  每次秒杀 乐观锁的版本都是0, 也就是说，不管该商品的存货有多少，都只能被秒杀一次
-        // 这里可以加一个全局的ConcurrentHash 里面存所有的 商品的被
-
+        // 这里可以加一个全局的ConcurrentHash 里面存所有的 秒杀商品 id -- 数据库表的version 字段
         // 先从全局的  idversion 关联数组中 获取version字段
-
         Integer version = LoadVersions.idVersionMap.get(goods.getId());
-//        System.out.println("version: " + version);
-  //      System.out.println(LoadVersions.idVersionMap.get(goods.getId()));
-
 
         SeckillGoods sg = new SeckillGoods();
         int ret = 0;
@@ -78,7 +73,6 @@ public class GoodsService {
             numAttempts++;
             try {
                 ret = goodsMapper.reduceStockByVersion(sg);
-                //System.out.println("ret:" + ret);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -88,7 +82,6 @@ public class GoodsService {
 
         if (ret > 0) {
             LoadVersions.idVersionMap.put(goods.getId(), version + 1);
-            //System.out.println(LoadVersions.idVersionMap.get(goods.getId()));
         }
 
         return ret > 0;
