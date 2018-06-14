@@ -18,6 +18,9 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 -- Table structure for sk_goods
 -- ----------------------------
+DROP DATABASE IF EXISTS seckill;
+CREATE DATABASE seckill;
+USE seckill;
 DROP TABLE IF EXISTS `sk_goods`;
 CREATE TABLE `sk_goods` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '商品ID',
@@ -73,7 +76,7 @@ CREATE TABLE sk_order(
 -- ----------------------------
 -- Records of sk_order
 -- ----------------------------
-INSERT INTO `sk_order` VALUES ('10', '18718185897', '1', '1');
+INSERT INTO `sk_order` (user_id, goods_id) VALUES ( '18718185897', '1');
 
 -- ----------------------------
 -- Table structure for sk_order_info
