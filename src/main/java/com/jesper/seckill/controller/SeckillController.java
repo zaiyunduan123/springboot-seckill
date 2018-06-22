@@ -86,8 +86,12 @@ public class SeckillController implements InitializingBean {
         //预减库存
         long stock = redisService.decr(GoodsKey.getGoodsStock, "" + goodsId);//10
         if (stock < 0) {
-            localOverMap.put(goodsId, true);
-            return Result.error(CodeMsg.SECKILL_OVER);
+            afterPropertiesSet();
+            long stock2 = redisService.decr(GoodsKey.getGoodsStock, "" + goodsId);//10
+            if(stock2 < 0){
+                localOverMap.put(goodsId, true);
+                return Result.error(CodeMsg.SECKILL_OVER);
+            }
         }
         //判断重复秒杀
         SeckillOrder order = orderService.getOrderByUserIdGoodsId(user.getId(), goodsId);
@@ -100,14 +104,13 @@ public class SeckillController implements InitializingBean {
         message.setGoodsId(goodsId);
         sender.sendSeckillMessage(message);
         return Result.success(0);//排队中
-
     }
 
     /**
      * 系统初始化,将商品信息加载到redis和本地内存
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         List<GoodsVo> goodsVoList = goodsService.listGoodsVo();
         if (goodsVoList == null) {
             return;
