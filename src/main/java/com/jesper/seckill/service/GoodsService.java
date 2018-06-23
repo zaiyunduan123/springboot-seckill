@@ -48,7 +48,9 @@ public class GoodsService {
     public boolean reduceStock(GoodsVo goods) {
         int numAttempts = 0;
         int ret = 0;
-        SeckillGoods sg = checkStock(goods.getId());
+        SeckillGoods sg = new SeckillGoods();
+        sg.setGoodsId(goods.getId());
+        sg.setVersion(goods.getVersion());
         do {
             numAttempts++;
             try {
@@ -61,13 +63,5 @@ public class GoodsService {
         } while (numAttempts < DEFAULT_MAX_RETRIES);
 
         return ret > 0;
-    }
-
-    private SeckillGoods checkStock(Long goodsId) {
-        SeckillGoods sg = goodsMapper.checkStock(goodsId);
-        if (sg.getStockCount() <= 0) {
-            throw new GlobalException(CodeMsg.SECKILL_OVER);
-        }
-        return sg;
     }
 }
