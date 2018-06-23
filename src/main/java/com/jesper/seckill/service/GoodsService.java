@@ -1,8 +1,9 @@
 package com.jesper.seckill.service;
 
-import com.jesper.seckill.bean.Goods;
 import com.jesper.seckill.bean.SeckillGoods;
+import com.jesper.seckill.exception.GlobalException;
 import com.jesper.seckill.mapper.GoodsMapper;
+import com.jesper.seckill.result.CodeMsg;
 import com.jesper.seckill.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,9 +47,8 @@ public class GoodsService {
      */
     public boolean reduceStock(GoodsVo goods) {
         int numAttempts = 0;
-        SeckillGoods sg = new SeckillGoods();
         int ret = 0;
-        sg.setGoodsId(goods.getId());
+        SeckillGoods sg = checkStock(goods.getId());
         do {
             numAttempts++;
             try {
@@ -63,4 +63,11 @@ public class GoodsService {
         return ret > 0;
     }
 
+    private SeckillGoods checkStock(Long goodsId) {
+        SeckillGoods sg = goodsMapper.checkStock(goodsId);
+        if (sg.getStockCount() <= 0) {
+            throw new GlobalException(CodeMsg.SECKILL_OVER);
+        }
+        return sg;
+    }
 }
