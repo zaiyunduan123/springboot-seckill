@@ -54,6 +54,7 @@ public class GoodsService {
         do {
             numAttempts++;
             try {
+                sg.setVersion(goodsMapper.getVersionByGoodsId(goods.getId()));
                 ret = goodsMapper.reduceStockByVersion(sg);
             } catch (Exception e) {
                 e.printStackTrace();
