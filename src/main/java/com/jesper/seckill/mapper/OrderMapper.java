@@ -3,11 +3,13 @@ package com.jesper.seckill.mapper;
 import com.jesper.seckill.bean.OrderInfo;
 import com.jesper.seckill.bean.SeckillOrder;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Repository;
 
 /**
  * Created by jiangyunxiong on 2018/5/23.
  */
 @Mapper
+@Repository
 public interface OrderMapper {
 
 
