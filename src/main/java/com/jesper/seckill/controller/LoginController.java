@@ -1,5 +1,6 @@
 package com.jesper.seckill.controller;
 
+import com.jesper.seckill.result.CodeMsg;
 import com.jesper.seckill.result.Result;
 import com.jesper.seckill.service.UserService;
 import com.jesper.seckill.vo.LoginVo;
@@ -47,10 +48,10 @@ public class LoginController {
 
     @RequestMapping("/do_updatePassword")
     @ResponseBody
-    public Result<String> doUpdatePassword(HttpServletResponse response, @Valid LoginVo loginVo) {//加入JSR303参数校验
+    public Result<String> doUpdatePassword(HttpServletResponse response, LoginVo loginVo) {//加入JSR303参数校验
         log.info(loginVo.toString());
         Boolean result = userService.updatePassword(loginVo);
-        return Result.success(String.valueOf(result));
+        return result ? Result.success(String.valueOf(result)) : Result.<String>error(CodeMsg.UPDATE_PASSWORD_ERROR);
     }
 
 }

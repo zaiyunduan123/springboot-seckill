@@ -16,6 +16,8 @@ public class LoginVo {
     @NotNull
     private String password;
 
+    private String nickname;
+
     public String getMobile() {
         return mobile;
     }
@@ -32,11 +34,21 @@ public class LoginVo {
         this.password = password;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     @Override
     public String toString() {
         return "LoginVo{" +
                 "mobile='" + mobile + '\'' +
+                "nickname='" + nickname + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }
+
 }

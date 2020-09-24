@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * Created by jiangyunxiong on 2018/5/22.
@@ -45,8 +46,8 @@ public class UserService {
         return user;
     }
 
-    public User getByUsername(String username){
-        return userMapper.getByNickname(username);
+    public List<User> getByNickname(String nickname){
+        return userMapper.getByNickname(nickname);
     }
 
     /**
@@ -74,13 +75,12 @@ public class UserService {
         if(StringUtils.isEmpty(formPass)){
             return false;
         }
-        User user = getByUsername(loginVo.getMobile());
+        List<User> users = getByNickname(loginVo.getNickname());
+        User user = users == null ? null : users.get(0);
         if(user == null){
             return false;
         }
         Long id = user.getId();
-        //生成唯一id作为token
-        String token = UUIDUtil.uuid();
         //更新数据库
         User toBeUpdate = new User();
         toBeUpdate.setId(id);
@@ -89,7 +89,7 @@ public class UserService {
         //更新缓存：先删除再插入
         redisService.delete(UserKey.getById, ""+id);
         user.setPassword(toBeUpdate.getPassword());
-        redisService.set(UserKey.token, token, user);
+        redisService.set(UserKey.token, "", user);
         return true;
     }
 
