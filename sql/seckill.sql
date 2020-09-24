@@ -121,3 +121,4 @@ CREATE TABLE `sk_user` (
 -- ----------------------------
 INSERT INTO `sk_user` VALUES ('18181818181', 'jesper', 'b7797cce01b4b131b433b6acf4add449', '1a2b3c4d', null, '2018-05-21 21:10:21', '2018-05-21 21:10:25', '1');
 INSERT INTO `sk_user` VALUES ('18217272828', 'jesper', 'b7797cce01b4b131b433b6acf4add449', '1a2b3c4d', null, '2018-05-21 21:10:21', '2018-05-21 21:10:25', '1');
+INSERT INTO `sk_user` VALUES ('13477199985', 'Joker', 'b7797cce01b4b131b433b6acf4add449', '1a2b3c4d', null, '2020-9-24 14:12:06', '2020-9-24 14:12:06', '1');

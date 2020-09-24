@@ -27,6 +27,11 @@ public class LoginController {
     UserService userService;
 
 
+    @RequestMapping("/to_updatePassword")
+    public String toUpdatePassword() {
+        return "updatePassword";
+    }
+
     @RequestMapping("/to_login")
     public String toLogin() {
         return "login";
@@ -38,6 +43,14 @@ public class LoginController {
         log.info(loginVo.toString());
         String token = userService.login(response, loginVo);
         return Result.success(token);
+    }
+
+    @RequestMapping("/do_updatePassword")
+    @ResponseBody
+    public Result<String> doUpdatePassword(HttpServletResponse response, @Valid LoginVo loginVo) {//加入JSR303参数校验
+        log.info(loginVo.toString());
+        Boolean result = userService.updatePassword(loginVo);
+        return Result.success(String.valueOf(result));
     }
 
 }

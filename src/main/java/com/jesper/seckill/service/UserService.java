@@ -45,15 +45,42 @@ public class UserService {
         return user;
     }
 
+    public User getByUsername(String username){
+        return userMapper.getByNickname(username);
+    }
+
     /**
      * 典型缓存同步场景：更新密码
      */
-    public boolean updatePassword(String token, long id, String formPass) {
+    /* public boolean updatePassword(String token, long id, String formPass) {
         //取user
         User user = getById(id);
         if(user == null) {
             throw new GlobalException(CodeMsg.MOBILE_NOT_EXIST);
         }
+        //更新数据库
+        User toBeUpdate = new User();
+        toBeUpdate.setId(id);
+        toBeUpdate.setPassword(MD5Util.formPassToDBPass(formPass, user.getSalt()));
+        userMapper.update(toBeUpdate);
+        //更新缓存：先删除再插入
+        redisService.delete(UserKey.getById, ""+id);
+        user.setPassword(toBeUpdate.getPassword());
+        redisService.set(UserKey.token, token, user);
+        return true;
+    } */
+    public boolean updatePassword(LoginVo loginVo){
+        String formPass = loginVo.getPassword();
+        if(StringUtils.isEmpty(formPass)){
+            return false;
+        }
+        User user = getByUsername(loginVo.getMobile());
+        if(user == null){
+            return false;
+        }
+        Long id = user.getId();
+        //生成唯一id作为token
+        String token = UUIDUtil.uuid();
         //更新数据库
         User toBeUpdate = new User();
         toBeUpdate.setId(id);
