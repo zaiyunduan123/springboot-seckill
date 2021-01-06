@@ -29,6 +29,10 @@ public class OrderService {
         return redisService.get(OrderKey.getSeckillOrderByUidGid, "" + userId + "_" + goodsId, SeckillOrder.class);
     }
 
+    public Boolean delOrderByUserIdGoodsId(long userId, long goodsId) {
+    	return redisService.delete(OrderKey.getSeckillOrderByUidGid, "" + userId + "_" + goodsId);
+    }
+
     public OrderInfo getOrderById(long orderId) {
         return orderMapper.getOrderById(orderId);
     }

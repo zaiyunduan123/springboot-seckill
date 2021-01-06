@@ -54,6 +54,45 @@ public class SeckillController implements InitializingBean {
     //做标记，判断该商品是否被处理过了
     private HashMap<Long, Boolean> localOverMap = new HashMap<Long, Boolean>();
 
+    @RequestMapping(value = "/do_cancel_order", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<Integer> delOrd(Model model, User user, @RequestParam("goodsId") long goodsId){
+//    	if (!rateLimiter.tryAcquire(1000, TimeUnit.MILLISECONDS)) {
+//            return  Result.error(CodeMsg.ACCESS_LIMIT_REACHED);
+//        }
+
+        if (user == null) {
+            return Result.error(CodeMsg.SESSION_ERROR);
+        }
+        
+        model.addAttribute("user", user);
+        
+        //内存标记，减少redis访问
+//        boolean over = localOverMap.get(goodsId);
+//        if (over) {
+//            return Result.error(CodeMsg.SECKILL_OVER);
+//        }
+        
+        //预减库存
+        long stock = redisService.incr(GoodsKey.getGoodsStock, "" + goodsId);//10
+//        if (stock < 0) {
+//            afterPropertiesSet();
+//            long stock2 = redisService.incr(GoodsKey.getGoodsStock, "" + goodsId);//10
+//            if(stock2 < 0){
+//                localOverMap.put(goodsId, true);
+//                return Result.error(CodeMsg.SECKILL_OVER);
+//            }
+//        }
+        //判断重复秒杀
+        orderService.delOrderByUserIdGoodsId(user.getId(), goodsId);
+        //入队
+        SeckillMessage message = new SeckillMessage();
+        message.setUser(user);
+        message.setGoodsId(goodsId);
+        sender.sendSeckillMessage(message);
+        return Result.success(0);//排队中
+    }
+    
     /**
      * GET POST
      * 1、GET幂等,服务端获取数据，无论调用多少次结果都一样
@@ -69,7 +108,6 @@ public class SeckillController implements InitializingBean {
     @RequestMapping(value = "/do_seckill", method = RequestMethod.POST)
     @ResponseBody
     public Result<Integer> list(Model model, User user, @RequestParam("goodsId") long goodsId) {
-
         if (!rateLimiter.tryAcquire(1000, TimeUnit.MILLISECONDS)) {
             return  Result.error(CodeMsg.ACCESS_LIMIT_REACHED);
         }
@@ -98,6 +136,7 @@ public class SeckillController implements InitializingBean {
         if (order != null) {
             return Result.error(CodeMsg.REPEATE_SECKILL);
         }
+//        orderService.delOrderByUserIdGoodsId(user.getId(), goodsId);
         //入队
         SeckillMessage message = new SeckillMessage();
         message.setUser(user);

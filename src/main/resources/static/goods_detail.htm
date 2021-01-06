@@ -43,6 +43,7 @@
             </td>
             <td>
                 <button class="btn btn-primary btn-block" type="button" id="buyButton" onclick="doSeckill()">立即秒杀</button>
+                <!-- <button class="btn btn-primary btn-block" type="button" id="buyButton" onclick="cancelOrder()">取消秒杀</button>  -->
                 <input type="hidden" name="goodsId"  id="goodsId" />
             </td>
         </tr>
@@ -97,6 +98,7 @@
             }
         });
     }
+    
     function doSeckill() {
         $.ajax({
             url: "/seckill/do_seckill",
@@ -108,6 +110,28 @@
                 if (data.code == 0) {
 //                    window.location.href = "/order_detail.htm?orderId=" + data.data.id;
                     getSeckillResult($("#goodsId").val());
+                } else {
+                    layer.msg(data.msg);
+                }
+            },
+            error: function () {
+                layer.msg("客户端请求有误");
+            }
+        });
+    }
+    
+
+    function cancelOrder() {
+        $.ajax({
+            url: "/seckill/do_cancel_order",
+            type: "POST",
+            data: {
+                goodsId: $("#goodsId").val(),
+            },
+            success: function (data) {
+                if (data.code == 0) {
+					window.location.href = "/";
+                    // getSeckillResult($("#goodsId").val());
                 } else {
                     layer.msg(data.msg);
                 }
