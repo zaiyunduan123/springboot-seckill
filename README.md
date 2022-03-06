@@ -94,6 +94,15 @@ JMeter
 优化后：QPS = 2501
 ![优化后](https://github.com/zaiyunduan123/jesper_seckill/blob/master/src/main/resources/static/img/stress-test/optimised_goodslist.png)
 
+
+## 关于项目运行的步骤
+1. 把sql目录下的seckill.sql脚本在你MySQL跑一遍，生成数据库表和数据
+2. 启动项目需要用到的组件Redis和RabbitMQ
+3. 直接运行启动类MainApplication.java
+4. 访问localhost:8080/login/to_login
+5. 登录的用户名是18181818181，密码是123456
+
+
 -----
 
 本项目是学习了imooc网视频之后的个人理解和知识汇总，学习链接：https://coding.imooc.com/class/168.html
